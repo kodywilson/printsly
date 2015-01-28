@@ -11,4 +11,5 @@ Gem::Specification.new do |s|
   s.executables  << 'printsly'
   s.license      = 'MIT'
   s.add_runtime_dependency 'spreadsheet', '~> 1.0.0', '>= 1.0.0'
+  s.add_runtime_dependency 'colorize', '~> 0.7.5', '>= 0.7.5'
 end

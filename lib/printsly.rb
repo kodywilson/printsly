@@ -1,3 +1,4 @@
+require 'colorize'
 require 'spreadsheet'
 Spreadsheet.client_encoding = 'UTF-8'
 
@@ -30,7 +31,7 @@ class Printers
 
   def initialize
     puts
-    puts "Printsly will help you add printers to CUPS."
+    puts "Let's get started."
     puts
   end
 
