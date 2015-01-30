@@ -6,7 +6,7 @@ Gem::Specification.new do |s|
   s.description  = "Helps you add printers to CUPS"
   s.authors      = ["Kody Wilson"]
   s.email        = 'kodywilson@gmail.com'
-  s.files        = ["lib/printsly.rb"]
+  s.files        = ["lib/printsly.rb", "lib/common_stuff.rb", "lib/printers.rb"]
   s.homepage     = 'https://github.com/kodywilson/printsly'
   s.executables  << 'printsly'
   s.license      = 'MIT'
