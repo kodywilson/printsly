@@ -2,4 +2,25 @@
 
 require 'printsly'
 
-Printers.new.build
+puts # formatting
+puts " " + "_"*73
+puts "|" + " "*73 + "|"
+puts "|" + " "*14 + "Printsly".yellow.underline + " "*51 + "|"
+puts "|" + " "*23 + "- will help you add printers to CUPS".yellow + " "*14 + "|"
+puts "|" + " "*73 + "|"
+puts " " + "-"*73
+puts # formatting
+puts # formatting
+puts "Selectable options will normally be enclosed in " + "[ ]".yellow + "'s."
+puts # formatting
+if File.exists?('../lib/config.json')
+  puts "Would you like to load a config?"
+#  GameSelect.new.outcome
+  puts # formatting
+else
+  #GameSelect.new("yes").outcome
+  Printers.new.build
+end
+#Town.new.choices
+
+#Printers.new.build
