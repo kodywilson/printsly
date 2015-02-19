@@ -7,13 +7,7 @@ class Printers
     puts
   end
 
-  def build
-    begin
-      spread = choose_file
-      puts #formatting
-      puts "You have chosen #{spread}. Is this correct?"
-      yes_no
-    end while not (@yes_no == "yes")
+  def build spread
 
     book = Spreadsheet.open spread
     sheet1 = book.worksheet 0
@@ -41,8 +35,8 @@ class Printers
     printers.each do | printername, printerdata |
       printerdata[0] = "0" + store + printerdata[0] if printerdata[0].include?('RT')
       printerdata[0] = "0" + store + printerdata[0] if printerdata[0].include?('SIM')
-      #puts "lpadmin -p " + printerdata[0] + " -L \"" + printerdata[3] + "\" -D \"" + printerdata[2] + "\" -E -v socket://" + printerdata[1] + ":9100 -m raw"
-      puts "Name: ".yellow + printerdata[0] + " " + "Type: ".yellow + printerdata[2] + " " + "IP: ".yellow + printerdata[1] + " " + "Desc: ".yellow + printerdata[3]
+      puts "lpadmin -p " + printerdata[0] + " -L \"" + printerdata[3] + "\" -D \"" + printerdata[2] + "\" -E -v socket://" + printerdata[1] + ":9100 -m raw"
+      #puts "Name: ".yellow + printerdata[0] + " " + "Type: ".yellow + printerdata[2] + " " + "IP: ".yellow + printerdata[1] + " " + "Desc: ".yellow + printerdata[3]
     end
   end
 

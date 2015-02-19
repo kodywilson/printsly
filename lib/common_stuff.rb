@@ -7,14 +7,14 @@ module CommonStuff
   def yes_no
     #restrict input to valid answers, but don't worry about case
     begin
-      puts "Please enter [yes] or [no]:"
+      puts "Please enter " + "[yes]".yellow + " or " + "[no]".yellow + ":"
       prompt; @yes_no = STDIN.gets.chomp.downcase
     end while not (@yes_no == "yes" or @yes_no == "no")
   end
 
   def choose_file
     puts #formatting
-    puts "Please enter the full path to the spreadsheet:"
+    puts "Please enter the full path to the spreadsheet(s):"
     prompt; gets.chomp
   end
 
