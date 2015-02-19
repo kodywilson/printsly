@@ -13,14 +13,4 @@ puts # formatting
 puts # formatting
 puts "Selectable options will normally be enclosed in " + "[ ]".yellow + "'s."
 puts # formatting
-#if File.exists?('../lib/config.json')
-#  puts "Would you like to load a config?"
-#  GameSelect.new.outcome
-puts # formatting
-#else
-  #GameSelect.new("yes").outcome
 Menu.new.choices
-#end
-#Town.new.choices
-
-#Printers.new.build

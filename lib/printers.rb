@@ -7,13 +7,7 @@ class Printers
     puts
   end
 
-  def build
-    begin
-      spread = choose_file
-      puts #formatting
-      puts "You have chosen #{spread}. Is this correct?"
-      yes_no
-    end while not (@yes_no == "yes")
+  def build spread
 
     book = Spreadsheet.open spread
     sheet1 = book.worksheet 0

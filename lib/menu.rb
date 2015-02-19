@@ -6,7 +6,6 @@ class Menu
 
   def initialize
     # Main Menu
-    # this greeting is only seen once
     puts "If this is the first time to run Printsly, please choose " + "[3]".yellow + " and configure."
     puts #space
     puts "The configuration file is stored in your home directory by default."
@@ -16,7 +15,6 @@ class Menu
     move = 0
     until move == "6"
       begin
-        #load_data
         puts # formatting
         puts bar_top.yellow
         #puts stat_bar(@player.name, @player.xp, @player.lvl, @player.coin, @player.cur_hp, @player.cur_mana)
@@ -35,11 +33,17 @@ class Menu
       end while not (move == "1" or move == "2" or move == "3" or move == "4" or move == "5" or move == "6")
       case
       when move == "1"
-        Printers.new.build
+        begin
+          spread = choose_file
+          puts #formatting
+          puts "You have chosen #{spread}. Is this correct?"
+          yes_no
+        end while not (@yes_no == "yes")
+        Printers.new.build(spread)
       when move == "2"
         Batch.new.choices
       when move == "3"
-        puts "Oh no you did ent!"
+        Configurator.new.choices
       when move == "4"
         puts "No way you weirdo!"
       when move == "5"
@@ -66,15 +70,15 @@ class Batch
   end
 
   def choices
+    #@work_dir = "" if @work_dir.nil? || @work_dir.empty?
     move = 0
-    #load_data
     until move == "3"
       puts # formatting
       puts bar_top.yellow
       #puts stat_bar(@player.name, @player.xp, @player.lvl, @player.coin, @player.cur_hp, @player.cur_mana)
       puts bar_low.yellow
       puts # formatting
-      work_dir = ""
+
       c = Choice.new "Please choose what you would like to do:",
       {
         "1" => "Choose Directory",
@@ -85,24 +89,24 @@ class Batch
       case
       when move == "1"
         begin
-          work_dir = choose_file
+          @work_dir = choose_file
           puts #format
-          puts "You have chosen #{work_dir}. Is this correct?"
+          puts "You have chosen " + @work_dir.yellow + " Is this correct?"
           yes_no
         end while not (@yes_no == "yes")
       when move == "2"
-        if work_dir.empty?
+        if @work_dir.nil? || @work_dir.empty?
           puts #format
           puts "You must choose a directory to process!"
           begin
-            work_dir = choose_file
+            @work_dir = choose_file
             puts #format
-            puts "You have chosen #{work_dir}. Is this correct?"
+            puts "You have chosen " + @work_dir.yellow + " Is this correct?"
             yes_no
           end while not (@yes_no == "yes")
         end
         puts #format
-        puts "I will process #{work_dir} now."
+        puts "I will process " + @work_dir.yellow + " now."
         puts "Processing..."
         puts "...done!"
       when move == "3"
@@ -117,99 +121,91 @@ end
 
 class Configurator
 
-  # Set and save Printsly defaults - not working yet!
+  # Set and save Printsly defaults - work in progress!
   def initialize
-    load_data
-    puts # formatting
-    puts "You enter the tavern. The air is thick with smoke, but the fire in the hearth"
-    puts "is warm and inviting."
-    puts if @player.cur_hp < @player.hp # formatting
-    puts "Some rest would probably do you good, #{@player.name}." if @player.cur_hp < @player.hp
-    puts # formatting
+    puts #format
+    puts "Let's configure " + "Printsly".yellow + "."
+    puts #format
+    puts "The " + "working directory".yellow + " is the location " + "Printsly".yellow + " will look for"
+    puts "spreadsheets containing printers to add to " + "CUPS".yellow + "."
+    puts #format
+    puts "Batch mode".yellow + " means all spreadsheets in " + "working directory".yellow + " will be processed."
+    puts #format
+    puts "Auto provision".yellow + " means provisioning is done immediately with no"
+    puts "confirmation dialogue."
   end
 
   def choices
     move = 0
     until move == "4"
-      begin
-        puts # formatting
-        puts bar_top.yellow
-        puts stat_bar(@player.name, @player.xp, @player.lvl, @player.coin, @player.cur_hp, @player.cur_mana)
-        puts bar_low.yellow
-        puts # formatting
-        room_cost = @player.lvl*2
-        nourish_cost = @player.lvl
-        c = Choice.new "What would you like to do in the tavern, #{@player.name}?",
-        {
-          "1" => "Buy some food.    | Cost: #{nourish_cost} coins.",
-          "2" => "Buy a drink.      | Cost: #{nourish_cost} coins.",
-          "3" => "Rest.             | Cost: #{room_cost} coins.",
-          "4" => "Leave the tavern."
-        }
-        move = c.prompt
-      end while not (move == "1" or move == "2" or move == "3" or move == "4")
+      puts # formatting
+      puts bar_top.yellow
+      #puts stat_bar(@player.name, @player.xp, @player.lvl, @player.coin, @player.cur_hp, @player.cur_mana)
+      puts bar_low.yellow
+      puts # formatting
+      @work_dir = "Not Set" if @work_dir.nil? || @work_dir.empty?
+      @batchy = "Off" if @batchy.nil? || @batchy.empty?
+      @auto_mater = "Off" if @auto_mater.nil? || @auto_mater.empty?
+      c = Choice.new "What would you like to configure?",
+      {
+        "1" => "Set Working Directory    | Current: " + @work_dir.yellow,
+        "2" => "Batch Mode               | Current: " + @batchy.yellow,
+        "3" => "Auto Provision?          | Current: " + @auto_mater.yellow,
+        "4" => "Return To Main Menu."
+      }
+      move = c.prompt
       case
       when move == "1"
-        if @player.coin >= @player.lvl and @player.buff_food != true
-          @player.buff_food = true
-          puts # formatting
-          puts "You find a seat at an open table and the waiter approaches to take your order."
-          puts # formatting
-          puts "The waiter tells you the food is so darn good, that it will help sustain your"
-          puts "health as you travel in the dungeon."
-          puts # formatting
-          puts "You order and enjoy a delicious meal, #{@player.name}, you really do feel swell!"
-          @player.coin = @player.coin - @player.lvl
-          save_data
-        elsif @player.buff_food == true
-          puts #formatting
-          puts "You couldn't possibly eat anymore."
-        else
-          puts # formatting
-          puts "You can't afford a meal! Go to the dungeon and earn some money!"
-        end
+      begin
+        puts #format
+        puts "The working directory is currently: " + @work_dir.yellow
+        @work_dir = choose_file
+        puts #format
+        puts "You have chosen " + @work_dir.yellow + " Is this correct?"
+        yes_no
+      end while not (@yes_no == "yes")
       when move == "2"
-        if @player.coin >= @player.lvl and @player.buff_drink != true
-          @player.buff_drink = true
-          puts # formatting
-          puts "You sally up to the bar and the barkeep approaches to take your order."
-          puts # formatting
-          puts "The barkeep tells you the wine is so fancy, that it will help sustain your"
-          puts "mana as you travel in the dungeon."
-          puts # formatting
-          puts "You swirl the wine, sniff, then take a sip, #{@player.name}, you really do feel superior!"
-          @player.coin = @player.coin - @player.lvl
-          save_data
-        elsif @player.buff_drink == true
-          puts #formatting
-          puts "You couldn't possibly drink anymore."
-        else
-          puts # formatting
-          puts "You can't afford wine, you churl! Go to the dungeon and earn some money!"
+        puts #format
+        puts "Batch mode is currently turned " + @batchy.yellow + "."
+        puts #format
+        case
+        when @batchy == "Off"
+          puts "Turn batch mode on?"
+          begin
+            yes_no
+          end while not (@yes_no == "yes" or @yes_no == "no")
+          @batchy = "On" if @yes_no == "yes"
+        when
+          @batchy == "On"
+          puts "Turn batch mode off?"
+          begin
+            yes_no
+          end while not (@yes_no == "yes" or @yes_no == "no")
+          @batchy = "Off" if @yes_no == "yes"
         end
       when move == "3"
-        if @player.coin >= @player.lvl*2 and (@player.cur_hp != @player.hp or @player.cur_mana != @player.mana)
-          health = @player.cur_hp
-          mana   = @player.cur_mana
-          @player.coin = @player.coin - @player.lvl*2
-          restore_player
-          health = @player.cur_hp - health
-          mana   = @player.cur_mana - mana
-          puts # formatting
-          puts "You pay for a small room and get a good night of rest."
-          puts "Resting has restored #{health} health points and #{mana} points of mana."
-        elsif (@player.cur_hp == @player.hp and @player.cur_mana == @player.mana)
-          puts # formatting
-          puts "You don't really need to rest, get out there and make your own discoveries!"
-        else
-          puts # formatting
-          puts "You can't afford a room! Hit the dungeon and earn some money!"
+        puts #format
+        puts "Auto provision is currently turned " + @auto_mater.yellow + "."
+        puts #format
+        case
+        when @auto_mater == "Off"
+          puts "Turn auto provision on?"
+          begin
+            yes_no
+          end while not (@yes_no == "yes" or @yes_no == "no")
+          @auto_mater = "On" if @yes_no == "yes"
+        when
+          @auto_mater == "On"
+          puts "Turn auto provision off?"
+          begin
+            yes_no
+          end while not (@yes_no == "yes" or @yes_no == "no")
+          @auto_mater = "Off" if @yes_no == "yes"
         end
       when move == "4"
-        puts # formatting
-        puts "Feeling much better, you step out of the tavern and back into town."
-        save_data
-        return
+        puts #format
+        puts "Returning to main menu."
+      return
       end
     end
   end
