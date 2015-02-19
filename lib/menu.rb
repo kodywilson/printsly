@@ -70,7 +70,6 @@ class Batch
   end
 
   def choices
-    #@work_dir = "" if @work_dir.nil? || @work_dir.empty?
     move = 0
     until move == "3"
       puts # formatting

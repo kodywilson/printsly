@@ -19,7 +19,7 @@ module CommonStuff
   end
 
   def bar_top
-    "_"*32 + " " + "Printsly" + " " + "_"*32
+    "_"*34 + " " + "Printsly" + " " + "_"*34
   end
 
   def stat_bar name, xp, lvl, coin, cur_hp, cur_mana
@@ -27,7 +27,7 @@ module CommonStuff
   end
 
   def bar_low
-    "-"*72
+    "-"*78
   end
 
 end
