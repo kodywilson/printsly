@@ -1,14 +1,18 @@
 # The menu system built into Printsly for command line use
-# Choices [1] Process single spreadsheet [2] Process all spreadsheets [3] Configure printsly [4] Show configuration [5] Reset configuration
+
 require 'choice'
 
 class Menu
 
   def initialize
-    # Main Menu
     puts "If this is the first time to run Printsly, please choose " + "[3]".yellow + " and configure."
-    puts #space
+    puts #format
     puts "The configuration file is stored in your home directory by default."
+    # Variables are set this way because Printsly will soon support a config file
+    work_dir   = "Not Set" if work_dir.nil? || work_dir.empty?
+    batchy     = "Off" if batchy.nil? || batchy.empty?
+    auto_mater = "Off" if auto_mater.nil? || auto_mater.empty?
+    @cur_conf   = fill_hash(work_dir, batchy, auto_mater)
   end
 
   def choices
@@ -43,11 +47,22 @@ class Menu
       when move == "2"
         Batch.new.choices
       when move == "3"
-        Configurator.new.choices
+        @cur_conf = Configurator.new.choices(@cur_conf)
       when move == "4"
-        puts "No way you weirdo!"
+        puts #format
+        puts "Current Working Directory:        " + @cur_conf[:work_dir].yellow
+        puts "Current Batch Mode Setting:       " + @cur_conf[:batchy].yellow
+        puts "Current Auto Provision Setting:   " + @cur_conf[:auto_mater].yellow
       when move == "5"
-        puts "Not yet my friend."
+        puts #format
+        puts "Resetting to default configuration...".yellow
+        sleep(0.5)
+        puts "...".red
+        sleep(0.5)
+        puts "......".red
+        @cur_conf   = fill_hash("Not Set", "Off", "Off")
+        sleep(0.5)
+        puts ".........done".red
       when move == "6"
         # leave application
         puts #format
@@ -94,7 +109,7 @@ class Batch
           yes_no
         end while not (@yes_no == "yes")
       when move == "2"
-        if @work_dir.nil? || @work_dir.empty?
+        if @work_dir.nil? || @work_dir.empty? || @work_dir == "Not Set"
           puts #format
           puts "You must choose a directory to process!"
           begin
@@ -128,13 +143,16 @@ class Configurator
     puts "The " + "working directory".yellow + " is the location " + "Printsly".yellow + " will look for"
     puts "spreadsheets containing printers to add to " + "CUPS".yellow + "."
     puts #format
-    puts "Batch mode".yellow + " means all spreadsheets in " + "working directory".yellow + " will be processed."
+    puts "Batch mode".yellow + " means all spreadsheets in the " + "working directory".yellow + " will be processed."
     puts #format
     puts "Auto provision".yellow + " means provisioning is done immediately with no"
     puts "confirmation dialogue."
   end
 
-  def choices
+  def choices(cur_conf)
+    work_dir   = cur_conf[:work_dir]
+    batchy     = cur_conf[:batchy]
+    auto_mater = cur_conf[:auto_mater]
     move = 0
     until move == "4"
       puts # formatting
@@ -142,14 +160,11 @@ class Configurator
       #puts stat_bar(@player.name, @player.xp, @player.lvl, @player.coin, @player.cur_hp, @player.cur_mana)
       puts bar_low.yellow
       puts # formatting
-      @work_dir = "Not Set" if @work_dir.nil? || @work_dir.empty?
-      @batchy = "Off" if @batchy.nil? || @batchy.empty?
-      @auto_mater = "Off" if @auto_mater.nil? || @auto_mater.empty?
       c = Choice.new "What would you like to configure?",
       {
-        "1" => "Set Working Directory    | Current: " + @work_dir.yellow,
-        "2" => "Batch Mode               | Current: " + @batchy.yellow,
-        "3" => "Auto Provision?          | Current: " + @auto_mater.yellow,
+        "1" => "Set Working Directory    | Current: " + work_dir.yellow,
+        "2" => "Batch Mode               | Current: " + batchy.yellow,
+        "3" => "Auto Provision?          | Current: " + auto_mater.yellow,
         "4" => "Return To Main Menu."
       }
       move = c.prompt
@@ -157,54 +172,55 @@ class Configurator
       when move == "1"
       begin
         puts #format
-        puts "The working directory is currently: " + @work_dir.yellow
-        @work_dir = choose_file
+        puts "The working directory is currently: " + work_dir.yellow
+        work_dir = choose_file
         puts #format
-        puts "You have chosen " + @work_dir.yellow + " Is this correct?"
+        puts "You have chosen " + work_dir.yellow + " Is this correct?"
         yes_no
       end while not (@yes_no == "yes")
       when move == "2"
         puts #format
-        puts "Batch mode is currently turned " + @batchy.yellow + "."
+        puts "Batch mode is currently turned " + batchy.yellow + "."
         puts #format
         case
-        when @batchy == "Off"
+        when batchy == "Off"
           puts "Turn batch mode on?"
           begin
             yes_no
           end while not (@yes_no == "yes" or @yes_no == "no")
-          @batchy = "On" if @yes_no == "yes"
+          batchy = "On" if @yes_no == "yes"
         when
-          @batchy == "On"
+          batchy == "On"
           puts "Turn batch mode off?"
           begin
             yes_no
           end while not (@yes_no == "yes" or @yes_no == "no")
-          @batchy = "Off" if @yes_no == "yes"
+          batchy = "Off" if @yes_no == "yes"
         end
       when move == "3"
         puts #format
-        puts "Auto provision is currently turned " + @auto_mater.yellow + "."
+        puts "Auto provision is currently turned " + auto_mater.yellow + "."
         puts #format
         case
-        when @auto_mater == "Off"
+        when auto_mater == "Off"
           puts "Turn auto provision on?"
           begin
             yes_no
           end while not (@yes_no == "yes" or @yes_no == "no")
-          @auto_mater = "On" if @yes_no == "yes"
+          auto_mater = "On" if @yes_no == "yes"
         when
-          @auto_mater == "On"
+          auto_mater == "On"
           puts "Turn auto provision off?"
           begin
             yes_no
           end while not (@yes_no == "yes" or @yes_no == "no")
-          @auto_mater = "Off" if @yes_no == "yes"
+          auto_mater = "Off" if @yes_no == "yes"
         end
       when move == "4"
         puts #format
         puts "Returning to main menu."
-      return
+        @cur_conf = fill_hash(work_dir, batchy, auto_mater)
+      return @cur_conf
       end
     end
   end

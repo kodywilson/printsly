@@ -30,4 +30,12 @@ module CommonStuff
     "-"*78
   end
 
+  def fill_hash work_dir, batchy, auto_mater
+    cur_conf = Hash.new
+    cur_conf[:work_dir]     = work_dir
+    cur_conf[:batchy]       = batchy
+    cur_conf[:auto_mater]   = auto_mater
+    cur_conf
+  end
+
 end
