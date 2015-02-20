@@ -2,14 +2,9 @@
 
 require 'printsly'
 
-puts # formatting
-puts " " + "_"*73
-puts "|" + " "*73 + "|"
-puts "|" + " "*14 + "Printsly".yellow.underline + " "*51 + "|"
-puts "|" + " "*23 + "- will help you add printers to CUPS".yellow + " "*14 + "|"
-puts "|" + " "*73 + "|"
-puts " " + "-"*73
-puts # formatting
+puts bar_top.yellow
+puts " "*24 + "Helps you add printers to CUPS".yellow + " "*19
+puts bar_low.yellow
 puts # formatting
 puts "Selectable options will normally be enclosed in " + "[ ]".yellow + "'s."
 puts # formatting

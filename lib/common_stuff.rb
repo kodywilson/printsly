@@ -19,7 +19,7 @@ module CommonStuff
   end
 
   def bar_top
-    "_"*32 + " " + "Printsly" + " " + "_"*32
+    "_"*34 + " " + "Printsly" + " " + "_"*34
   end
 
   def stat_bar name, xp, lvl, coin, cur_hp, cur_mana
@@ -27,7 +27,15 @@ module CommonStuff
   end
 
   def bar_low
-    "-"*72
+    "-"*78
+  end
+
+  def fill_hash work_dir, batchy, auto_mater
+    cur_conf = Hash.new
+    cur_conf[:work_dir]     = work_dir
+    cur_conf[:batchy]       = batchy
+    cur_conf[:auto_mater]   = auto_mater
+    cur_conf
   end
 
 end
