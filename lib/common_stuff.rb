@@ -38,4 +38,21 @@ module CommonStuff
     cur_conf
   end
 
+  def work_dir_text
+    puts #format
+    puts "The " + "working directory".yellow + " is the location " + "Printsly".yellow + " will look for"
+    puts "spreadsheets containing printers to add to " + "CUPS".yellow + "."
+  end
+
+  def batchy_text
+    puts #format
+    puts "Batch mode".yellow + " means all spreadsheets in the " + "working directory".yellow + " will be processed."
+  end
+
+  def auto_text
+    puts #format
+    puts "Auto provision".yellow + " means provisioning is done immediately with no"
+    puts "confirmation dialogue."
+  end
+
 end

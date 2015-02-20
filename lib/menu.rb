@@ -40,7 +40,7 @@ class Menu
         begin
           spread = choose_file
           puts #formatting
-          puts "You have chosen #{spread}. Is this correct?"
+          puts "You have chosen " + "#{spread}".yellow + ". Is this correct?"
           yes_no
         end while not (@yes_no == "yes")
         Printers.new.build(spread)
@@ -50,23 +50,23 @@ class Menu
         @cur_conf = Configurator.new.choices(@cur_conf)
       when move == "4"
         puts #format
-        puts "Current Working Directory:        " + @cur_conf[:work_dir].yellow
-        puts "Current Batch Mode Setting:       " + @cur_conf[:batchy].yellow
-        puts "Current Auto Provision Setting:   " + @cur_conf[:auto_mater].yellow
+        puts "Current Working Directory:        " + @cur_conf[:work_dir].green
+        puts "Current Batch Mode Setting:       " + @cur_conf[:batchy].green
+        puts "Current Auto Provision Setting:   " + @cur_conf[:auto_mater].green
       when move == "5"
         puts #format
         puts "Resetting to default configuration...".yellow
         sleep(0.5)
-        puts "...".red
+        puts "...".yellow
         sleep(0.5)
         puts "......".red
         @cur_conf   = fill_hash("Not Set", "Off", "Off")
         sleep(0.5)
-        puts ".........done".red
+        puts ".........done!".green
       when move == "6"
         # leave application
         puts #format
-        puts "As you wish."
+        puts "As you wish.".yellow
         puts #format
         exit
       end
@@ -111,7 +111,7 @@ class Batch
       when move == "2"
         if @work_dir.nil? || @work_dir.empty? || @work_dir == "Not Set"
           puts #format
-          puts "You must choose a directory to process!"
+          puts "You must choose a directory to process!".red
           begin
             @work_dir = choose_file
             puts #format
@@ -121,11 +121,15 @@ class Batch
         end
         puts #format
         puts "I will process " + @work_dir.yellow + " now."
-        puts "Processing..."
-        puts "...done!"
+        sleep(0.5)
+        puts "...".yellow
+        sleep(0.5)
+        puts "......".red
+        sleep(0.5)
+        puts ".........done!".green
       when move == "3"
         puts #format
-        puts "Returning to main menu."
+        puts "Returning to main menu.".yellow
         return
       end
     end
@@ -139,14 +143,9 @@ class Configurator
   def initialize
     puts #format
     puts "Let's configure " + "Printsly".yellow + "."
-    puts #format
-    puts "The " + "working directory".yellow + " is the location " + "Printsly".yellow + " will look for"
-    puts "spreadsheets containing printers to add to " + "CUPS".yellow + "."
-    puts #format
-    puts "Batch mode".yellow + " means all spreadsheets in the " + "working directory".yellow + " will be processed."
-    puts #format
-    puts "Auto provision".yellow + " means provisioning is done immediately with no"
-    puts "confirmation dialogue."
+    work_dir_text
+    batchy_text
+    auto_text
   end
 
   def choices(cur_conf)
@@ -162,25 +161,27 @@ class Configurator
       puts # formatting
       c = Choice.new "What would you like to configure?",
       {
-        "1" => "Set Working Directory    | Current: " + work_dir.yellow,
-        "2" => "Batch Mode               | Current: " + batchy.yellow,
-        "3" => "Auto Provision?          | Current: " + auto_mater.yellow,
+        "1" => "Set Working Directory    | Current: " + work_dir.green,
+        "2" => "Batch Mode               | Current: " + batchy.green,
+        "3" => "Auto Provision?          | Current: " + auto_mater.green,
         "4" => "Return To Main Menu."
       }
       move = c.prompt
       case
       when move == "1"
       begin
+        work_dir_text
         puts #format
-        puts "The working directory is currently: " + work_dir.yellow
+        puts "The working directory is currently: " + work_dir.green
         work_dir = choose_file
         puts #format
         puts "You have chosen " + work_dir.yellow + " Is this correct?"
         yes_no
       end while not (@yes_no == "yes")
       when move == "2"
+        batchy_text
         puts #format
-        puts "Batch mode is currently turned " + batchy.yellow + "."
+        puts "Batch mode is currently turned " + batchy.green + "."
         puts #format
         case
         when batchy == "Off"
@@ -198,8 +199,9 @@ class Configurator
           batchy = "Off" if @yes_no == "yes"
         end
       when move == "3"
+        auto_text
         puts #format
-        puts "Auto provision is currently turned " + auto_mater.yellow + "."
+        puts "Auto provision is currently turned " + auto_mater.green + "."
         puts #format
         case
         when auto_mater == "Off"
