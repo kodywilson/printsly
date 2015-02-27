@@ -5,14 +5,21 @@ require 'choice'
 class Menu
 
   def initialize
-    puts "If this is the first time to run Printsly, please choose " + "[3]".yellow + " and configure."
-    puts #format
-    puts "The configuration file is stored in your home directory by default."
-    # Variables are set this way because Printsly will soon support a config file
-    work_dir   = "Not Set" if work_dir.nil? || work_dir.empty?
-    batchy     = "Off" if batchy.nil? || batchy.empty?
-    auto_mater = "Off" if auto_mater.nil? || auto_mater.empty?
-    @cur_conf   = fill_hash(work_dir, batchy, auto_mater)
+    case File.exists?(File.join(Dir.home, "printsly.json"))
+    when false
+      puts "If this is the first time to run Printsly, please choose " + "[3]".yellow + " and configure."
+      puts #format
+      puts "The configuration file is stored in your home directory by default."
+      File.new(File.join(Dir.home, "printsly.json"), "w+")
+      # Variables are set this way because Printsly will soon support a config file
+      work_dir   = "Not Set" if work_dir.nil? || work_dir.empty?
+      batchy     = "Off" if batchy.nil? || batchy.empty?
+      auto_mater = "Off" if auto_mater.nil? || auto_mater.empty?
+      @cur_conf  = fill_hash(work_dir, batchy, auto_mater)
+    when true
+      @cur_conf  = load_config
+      puts "Using configuration found in your home directory.".yellow
+    end
   end
 
   def choices
@@ -61,6 +68,7 @@ class Menu
         sleep(0.5)
         puts "......".red
         @cur_conf   = fill_hash("Not Set", "Off", "Off")
+        save_config(@cur_conf)
         sleep(0.5)
         puts ".........done!".green
       when move == "6"
@@ -222,6 +230,7 @@ class Configurator
         puts #format
         puts "Returning to main menu."
         @cur_conf = fill_hash(work_dir, batchy, auto_mater)
+        save_config(@cur_conf)
       return @cur_conf
       end
     end

@@ -1,5 +1,7 @@
 module CommonStuff
 
+  @@config_file = File.join(Dir.home, "printsly.json")
+
   def prompt
     print ">> "
   end
@@ -36,6 +38,18 @@ module CommonStuff
     cur_conf[:batchy]       = batchy
     cur_conf[:auto_mater]   = auto_mater
     cur_conf
+  end
+
+  def load_config
+    file_conf = JSON.parse(File.read(@@config_file))
+    cur_conf = fill_hash(file_conf['work_dir'], file_conf['batchy'], file_conf['auto_mater'])
+    cur_conf
+  end
+
+  def save_config(cur_conf)
+    File.open(@@config_file, "w") do |f|
+      f.write(cur_conf.to_json)
+    end
   end
 
   def work_dir_text
