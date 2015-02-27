@@ -1,6 +1,7 @@
 require 'choice'
 require 'colorize'
 require 'common_stuff'
+require 'json'
 require 'menu'
 require 'printers'
 require 'spreadsheet'
