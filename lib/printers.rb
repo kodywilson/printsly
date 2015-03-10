@@ -32,11 +32,21 @@ class Printers
     puts "This is what I am planning on provisioning for store " + store + ":"
     puts
 
+    if Dir.exists?("/var/log/cups")
+      File.new("/var/log/cups/provision_log", "w+") unless File.exists?("/var/log/cups/provision_log")
+    end
+
     printers.each do | printername, printerdata |
       printerdata[0] = "0" + store + printerdata[0] if printerdata[0].include?('RT')
       printerdata[0] = "0" + store + printerdata[0] if printerdata[0].include?('SIM')
       puts "lpadmin -p " + printerdata[0] + " -L \"" + printerdata[3] + "\" -D \"" + printerdata[2] + "\" -E -v socket://" + printerdata[1] + ":9100 -m raw"
       #puts "Name: ".yellow + printerdata[0] + " " + "Type: ".yellow + printerdata[2] + " " + "IP: ".yellow + printerdata[1] + " " + "Desc: ".yellow + printerdata[3]
+      if File.exists?("/var/log/cups/provision_log")
+        timey = Time.new
+        File.open("/var/log/cups/provision_log", "a") do |f|
+          f.puts "Added: " + timey.inspect + " lpadmin -p " + printerdata[0] + " -L \"" + printerdata[3] + "\" -D \"" + printerdata[2] + "\" -E -v socket://" + printerdata[1] + ":9100 -m raw"
+        end
+      end
     end
   end
 
