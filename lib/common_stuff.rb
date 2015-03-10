@@ -24,10 +24,6 @@ module CommonStuff
     "_"*34 + " " + "Printsly" + " " + "_"*34
   end
 
-  def stat_bar name, xp, lvl, coin, cur_hp, cur_mana
-    "  Name: " + "#{name}" + " | XP: #{xp} | Lvl: #{lvl} | Coin: #{coin} | HP: #{cur_hp} | Mana: #{cur_mana}"
-  end
-
   def bar_low
     "-"*78
   end

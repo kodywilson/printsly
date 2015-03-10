@@ -1,4 +1,4 @@
-# The menu system built into Printsly for command line use
+# The menu system for Printsly's command line interface
 
 require 'choice'
 
@@ -10,8 +10,6 @@ class Menu
       puts "If this is the first time to run Printsly, please choose " + "[3]".yellow + " and configure."
       puts #format
       puts "The configuration file is stored in your home directory by default."
-      File.new(File.join(Dir.home, "printsly.json"), "w+")
-      # Variables are set this way because Printsly will soon support a config file
       work_dir   = "Not Set" if work_dir.nil? || work_dir.empty?
       batchy     = "Off" if batchy.nil? || batchy.empty?
       auto_mater = "Off" if auto_mater.nil? || auto_mater.empty?
@@ -28,7 +26,6 @@ class Menu
       begin
         puts # formatting
         puts bar_top.yellow
-        #puts stat_bar(@player.name, @player.xp, @player.lvl, @player.coin, @player.cur_hp, @player.cur_mana)
         puts bar_low.yellow
         puts # formatting
         c = Choice.new "Please choose what you would like to do:",
@@ -97,7 +94,6 @@ class Batch
     until move == "3"
       puts # formatting
       puts bar_top.yellow
-      #puts stat_bar(@player.name, @player.xp, @player.lvl, @player.coin, @player.cur_hp, @player.cur_mana)
       puts bar_low.yellow
       puts # formatting
 
@@ -147,8 +143,9 @@ end
 
 class Configurator
 
-  # Set and save Printsly defaults - work in progress!
+  # Set and save Printsly defaults
   def initialize
+    File.new(File.join(Dir.home, "printsly.json"), "w+") unless File.exists?(File.join(Dir.home, "printsly.json"))
     puts #format
     puts "Let's configure " + "Printsly".yellow + "."
     work_dir_text
@@ -164,7 +161,6 @@ class Configurator
     until move == "4"
       puts # formatting
       puts bar_top.yellow
-      #puts stat_bar(@player.name, @player.xp, @player.lvl, @player.coin, @player.cur_hp, @player.cur_mana)
       puts bar_low.yellow
       puts # formatting
       c = Choice.new "What would you like to configure?",
