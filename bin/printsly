@@ -2,10 +2,48 @@
 
 require 'printsly'
 
-puts bar_top.yellow
-puts " "*24 + "Helps you add printers to CUPS".yellow + " "*19
-puts bar_low.yellow
-puts # formatting
-puts "Selectable options will normally be enclosed in " + "[ ]".yellow + "'s."
-puts # formatting
-Menu.new.choices
+v = ARGV
+case
+when v.empty? == true
+  puts bar_top.yellow
+  puts " "*24 + "Helps you add printers to CUPS".yellow + " "*19
+  puts bar_low.yellow
+  puts # formatting
+  puts "Selectable options will normally be enclosed in " + "[ ]".yellow + "'s."
+  puts # formatting
+  Menu.new.choices
+when v.count > 1
+  puts # formatting
+  puts "Please pass only one directory at a time!".red
+  puts # formatting
+  exit 1 #something went wrong
+when v.count < 2
+  v.each do |dirk|
+    if /^\//.match(dirk) #does path start at root?
+      case Dir.exists?(dirk)
+      when false
+        puts # formatting
+        puts "That directory does not exist!".red
+        puts # formatting
+        exit 1 #something went wrong
+      when true
+        spreads = Dir.glob(File.join(dirk, '*.xls'))
+        case spreads.size > 0
+        when true
+          spreads.each do |sheety|
+            Printers.new.build(sheety)
+          end
+        when false
+          puts # formatting
+          puts "There are no spreadsheets in specified directory!".red
+          puts # formatting
+        end
+      end
+    else
+      puts # formatting
+      puts "Please pass the full path to the directory you wish to process and nothing else!".red
+      puts # formatting
+      exit 1 #something went wrong
+    end
+  end
+end
