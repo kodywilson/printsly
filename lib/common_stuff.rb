@@ -2,6 +2,13 @@ module CommonStuff
 
   @@config_file = File.join(Dir.home, "printsly.json")
 
+  def bar_both
+    puts # formatting
+    puts bar_top.yellow
+    puts bar_low.yellow
+    puts # formatting
+  end
+
   def prompt
     print ">> "
   end
@@ -12,6 +19,7 @@ module CommonStuff
       puts "Please enter " + "[yes]".yellow + " or " + "[no]".yellow + ":"
       prompt; @yes_no = STDIN.gets.chomp.downcase
     end while not (@yes_no == "yes" or @yes_no == "no")
+    @yes_no
   end
 
   def choose_file
@@ -63,6 +71,12 @@ module CommonStuff
     puts #format
     puts "Auto provision".yellow + " means provisioning is done immediately with no"
     puts "confirmation dialogue."
+  end
+
+  def welcome_text
+    puts "If this is the first time to run Printsly, please choose " + "[3]".yellow + " and configure."
+    puts #format
+    puts "The configuration file is stored in your home directory by default."
   end
 
 end

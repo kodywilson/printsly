@@ -13,3 +13,31 @@ RSpec.describe Printers, "#build" do
     end
   end
 end
+
+RSpec.describe Menu, "#batch" do
+  context "when sent a spreadsheet" do
+    it "gives the values for printers" do
+      cur_conf = Hash.new
+      cur_conf[:work_dir]   = "lib/test_data/0777.xls"
+      cur_conf[:batchy]     = "On"
+      cur_conf[:auto_mater] = "On"
+      batch = Batch.new.process(cur_conf)
+      expect(batch["0777LAB2"]).to eq ["0777LAB2", "192.168.1.21", "Zebra Labeler", "777 Test Printer Lab"]
+    end
+  end
+end
+
+RSpec.describe CommonStuff, "#bars" do
+  context "when asked for top bar" do
+    it "puts the top bar" do
+      toppy = bar_top
+      expect(toppy).to eq "__________________________________ Printsly __________________________________"
+    end
+  end
+  context "when asked for lower bar" do
+    it "puts the lower bar" do
+      lowly = bar_low
+      expect(lowly).to eq "------------------------------------------------------------------------------"
+    end
+  end
+end
