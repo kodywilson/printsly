@@ -153,6 +153,28 @@ class Configurator
     auto_text
   end
 
+  def batch_mode batchy
+    batchy_text
+    puts #format
+    puts "Batch mode is currently turned " + batchy.green + "."
+    puts #format
+    case
+    when batchy == "Off"
+      puts "Turn batch mode on?"
+      begin
+        yes_no
+      end while not (@yes_no == "yes" or @yes_no == "no")
+      batchy = "On" if @yes_no == "yes"
+    when
+      batchy == "On"
+      puts "Turn batch mode off?"
+      begin
+        yes_no
+      end while not (@yes_no == "yes" or @yes_no == "no")
+      batchy = "Off" if @yes_no == "yes"
+    end
+  end
+
   def choices(cur_conf)
     work_dir   = cur_conf[:work_dir]
     batchy     = cur_conf[:batchy]
@@ -183,45 +205,9 @@ class Configurator
         yes_no
       end while not (@yes_no == "yes")
       when move == "2"
-        batchy_text
-        puts #format
-        puts "Batch mode is currently turned " + batchy.green + "."
-        puts #format
-        case
-        when batchy == "Off"
-          puts "Turn batch mode on?"
-          begin
-            yes_no
-          end while not (@yes_no == "yes" or @yes_no == "no")
-          batchy = "On" if @yes_no == "yes"
-        when
-          batchy == "On"
-          puts "Turn batch mode off?"
-          begin
-            yes_no
-          end while not (@yes_no == "yes" or @yes_no == "no")
-          batchy = "Off" if @yes_no == "yes"
-        end
+        batchy = batch_mode(batchy)
       when move == "3"
-        auto_text
-        puts #format
-        puts "Auto provision is currently turned " + auto_mater.green + "."
-        puts #format
-        case
-        when auto_mater == "Off"
-          puts "Turn auto provision on?"
-          begin
-            yes_no
-          end while not (@yes_no == "yes" or @yes_no == "no")
-          auto_mater = "On" if @yes_no == "yes"
-        when
-          auto_mater == "On"
-          puts "Turn auto provision off?"
-          begin
-            yes_no
-          end while not (@yes_no == "yes" or @yes_no == "no")
-          auto_mater = "Off" if @yes_no == "yes"
-        end
+        auto_mater = provision_mode(auto_mater)
       when move == "4"
         puts #format
         puts "Returning to main menu."
@@ -229,6 +215,28 @@ class Configurator
         save_config(@cur_conf)
       return @cur_conf
       end
+    end
+  end
+
+  def provision_mode auto_mater
+    auto_text
+    puts #format
+    puts "Auto provision is currently turned " + auto_mater.green + "."
+    puts #format
+    case
+    when auto_mater == "Off"
+      puts "Turn auto provision on?"
+      begin
+        yes_no
+      end while not (@yes_no == "yes" or @yes_no == "no")
+      auto_mater = "On" if @yes_no == "yes"
+    when
+      auto_mater == "On"
+      puts "Turn auto provision off?"
+      begin
+        yes_no
+      end while not (@yes_no == "yes" or @yes_no == "no")
+      auto_mater = "Off" if @yes_no == "yes"
     end
   end
 
