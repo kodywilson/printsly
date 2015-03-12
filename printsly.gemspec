@@ -1,7 +1,7 @@
 Gem::Specification.new do |s|
   s.name         = 'printsly'
-  s.version      = '0.0.0'
-  s.date         = '2015-01-27'
+  s.version      = '0.0.1'
+  s.date         = '2015-03-12'
   s.summary      = "Printer management software"
   s.description  = "Helps you add printers to CUPS"
   s.authors      = ["Kody Wilson"]
