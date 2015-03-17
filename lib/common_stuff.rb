@@ -9,6 +9,11 @@ module CommonStuff
     puts # formatting
   end
 
+  def mod_name namey, store
+    namey = "0" + store + namey if namey.include?('RT') || namey.include?('SIM')
+    namey
+  end
+
   def prompt
     print ">> "
   end

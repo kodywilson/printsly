@@ -41,13 +41,7 @@ class Menu
   def actions move
     case
     when move == "1"
-      begin
-        spread = choose_file
-        puts #formatting
-        puts "You have chosen " + spread.yellow + ". Is this correct?"
-        yes_no
-      end while not (@yes_no == "yes")
-      Printers.new.build(spread)
+      singleton(@cur_conf)
     when move == "2"
       Batch.new.process(@cur_conf)
     when move == "3"
@@ -77,6 +71,20 @@ class Menu
     end
   end
 
+  def singleton cur_conf
+    begin
+      spread = choose_file
+      puts #formatting
+      puts "You have chosen " + spread.yellow + ". Is this correct?"
+      yes_no
+    end while not (@yes_no == "yes")
+    book = Spreadsheet.open spread
+    sheet = book.worksheet 0
+    store = sheet.row(0)[0][6..8]
+    printers = Printers.new.hashy(sheet, store)
+    Printers.new.provision(printers, store)
+  end
+
 end
 
 class Batch
@@ -92,13 +100,12 @@ class Batch
     end
     puts "Processing " + cur_conf[:work_dir].yellow + ":"
     sleep(0.5)
-    #Printers.new.batch(cur_conf[:work_dir]) This will be used once Printers::Batch is built
     puts "...".yellow
     sleep(0.5)
     puts "......".red
     sleep(0.5)
     puts ".........done!".green
-    Printers.new.build(cur_conf[:work_dir])
+    Printers.new.batch(cur_conf[:work_dir])
   end
 
 end

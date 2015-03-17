@@ -31,7 +31,8 @@ when v.count < 2
         case spreads.size > 0
         when true
           spreads.each do |sheety|
-            Printers.new.build(sheety)
+            cur_conf = fill_hash sheety, "On", "On"
+            Batch.new.process(cur_conf)
           end
         when false
           puts # formatting
