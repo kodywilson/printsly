@@ -9,6 +9,29 @@ module CommonStuff
     puts # formatting
   end
 
+  def prov_text store
+    "This is what I am planning on provisioning for store " + store + ":"
+  end
+
+  def printer_puts printerdata
+    "Name: ".yellow + printerdata[0] + " " + "Type: ".yellow + printerdata[2] + " " + "IP: ".yellow + printerdata[1] + " " + "Desc: ".yellow + printerdata[3]
+  end
+
+  def log_file
+    if Dir.exists?("/var/log/cups")
+      File.new("/var/log/cups/provision_log", "w+") unless File.exists?("/var/log/cups/provision_log")
+    end
+  end
+
+  def log_entry printerdata
+    if File.exists?("/var/log/cups/provision_log")
+      timey = Time.new
+      File.open("/var/log/cups/provision_log", "a") do |f|
+        f.puts "Added: " + timey.inspect + " lpadmin -p " + printerdata[0] + " -L \"" + printerdata[3] + "\" -D \"" + printerdata[2] + "\" -E -v socket://" + printerdata[1] + ":9100 -m raw"
+      end
+    end
+  end
+
   def mod_name namey, store
     namey = "0" + store + namey if namey.include?('RT') || namey.include?('SIM')
     namey

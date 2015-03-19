@@ -93,3 +93,22 @@ RSpec.describe CommonStuff, "#bars" do
     end
   end
 end
+
+RSpec.describe CommonStuff, "#prov_text" do
+  context "when asked for provisioning text" do
+    it "puts the provisioning greeting including store number" do
+      provo = prov_text(store)
+      expect(provo).to eq "This is what I am planning on provisioning for store 777:"
+    end
+  end
+end
+
+RSpec.describe CommonStuff, "#printer_puts" do
+  context "when sent array of printer data" do
+    it "puts the information about the printer" do
+      prints_albert = Printers.new.printer(row, printername, store)
+      prints_albert = printer_puts(prints_albert)
+      expect(prints_albert).to eq "\e[0;33;49mName: \e[0m0777LAB2 \e[0;33;49mType: \e[0mZebra Labeler \e[0;33;49mIP: \e[0m192.168.1.21 \e[0;33;49mDesc: \e[0m777 Test Printer Lab"
+    end
+  end
+end

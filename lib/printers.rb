@@ -28,11 +28,11 @@ class Printers
 
   def show_printers printers, store
     puts
-    puts "This is what I am planning on provisioning for store " + store + ":"
+    puts prov_text(store)
     puts
     printers.each do | printername, printerdata |
       printerdata[0] = mod_name(printerdata[0], store)
-      puts "Name: ".yellow + printerdata[0] + " " + "Type: ".yellow + printerdata[2] + " " + "IP: ".yellow + printerdata[1] + " " + "Desc: ".yellow + printerdata[3]
+      puts printer_puts(printerdata)
     end
   end
 
@@ -48,18 +48,11 @@ class Printers
   end
 
   def provision printers, store
-    if Dir.exists?("/var/log/cups")
-      File.new("/var/log/cups/provision_log", "w+") unless File.exists?("/var/log/cups/provision_log")
-    end
+    log_file
     printers.each do | printername, printerdata |
       printerdata[0] = mod_name(printerdata[0], store)
       puts "lpadmin -p " + printerdata[0] + " -L \"" + printerdata[3] + "\" -D \"" + printerdata[2] + "\" -E -v socket://" + printerdata[1] + ":9100 -m raw"
-      if File.exists?("/var/log/cups/provision_log")
-        timey = Time.new
-        File.open("/var/log/cups/provision_log", "a") do |f|
-          f.puts "Added: " + timey.inspect + " lpadmin -p " + printerdata[0] + " -L \"" + printerdata[3] + "\" -D \"" + printerdata[2] + "\" -E -v socket://" + printerdata[1] + ":9100 -m raw"
-        end
-      end
+      log_entry(printerdata)
     end
   end
 
