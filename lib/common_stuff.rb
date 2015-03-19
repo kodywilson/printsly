@@ -1,6 +1,7 @@
 module CommonStuff
 
   @@config_file = File.join(Dir.home, "printsly.json")
+  @@prov_log = "/var/log/cups/provision_log"
 
   def bar_both
     puts # formatting
@@ -17,19 +18,31 @@ module CommonStuff
     "Name: ".yellow + printerdata[0] + " " + "Type: ".yellow + printerdata[2] + " " + "IP: ".yellow + printerdata[1] + " " + "Desc: ".yellow + printerdata[3]
   end
 
+  def lpadmin_puts printerdata
+    "lpadmin -p " + printerdata[0] + " -L \"" + printerdata[3] + "\" -D \"" + printerdata[2] + "\" -E -v socket://" + printerdata[1] + ":9100 -m raw"
+  end
+
   def log_file
     if Dir.exists?("/var/log/cups")
-      File.new("/var/log/cups/provision_log", "w+") unless File.exists?("/var/log/cups/provision_log")
+      File.new(@@prov_log, "w+") unless File.exists?(@@prov_log)
     end
   end
 
   def log_entry printerdata
-    if File.exists?("/var/log/cups/provision_log")
-      timey = Time.new
-      File.open("/var/log/cups/provision_log", "a") do |f|
-        f.puts "Added: " + timey.inspect + " lpadmin -p " + printerdata[0] + " -L \"" + printerdata[3] + "\" -D \"" + printerdata[2] + "\" -E -v socket://" + printerdata[1] + ":9100 -m raw"
-      end
+    if File.exists?(@@prov_log)
+      log_entry_write(printerdata)
     end
+  end
+
+  def log_entry_write printerdata
+    File.open(@@prov_log, "a") do |f|
+      f.puts log_entry_data(printerdata)
+    end
+  end
+
+  def log_entry_data printerdata
+    timey = Time.new
+    "Added: " + timey.inspect + " lpadmin -p " + printerdata[0] + " -L \"" + printerdata[3] + "\" -D \"" + printerdata[2] + "\" -E -v socket://" + printerdata[1] + ":9100 -m raw"
   end
 
   def mod_name namey, store
