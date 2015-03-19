@@ -6,6 +6,7 @@ store = sheet1.row(0)[0][6..8]
 row = sheet1.row(6)
 printername = row[4]
 printys = Printers.new.hashy(sheet1, store)
+prints_albert = Printers.new.printer(row, printername, store)
 
 RSpec.describe CommonStuff, "#mod_name" do
   context "when sent printer name" do
@@ -90,6 +91,43 @@ RSpec.describe CommonStuff, "#bars" do
     it "puts the lower bar" do
       lowly = bar_low
       expect(lowly).to eq "------------------------------------------------------------------------------"
+    end
+  end
+end
+
+RSpec.describe CommonStuff, "#prov_text" do
+  context "when asked for provisioning text" do
+    it "puts the provisioning greeting including store number" do
+      provo = prov_text(store)
+      expect(provo).to eq "This is what I am planning on provisioning for store 777:"
+    end
+  end
+end
+
+RSpec.describe CommonStuff, "#printer_puts" do
+  context "when sent array of printer data" do
+    it "puts the information about the printer" do
+      prints_george = printer_puts(prints_albert)
+      expect(prints_george).to eq "\e[0;33;49mName: \e[0m0777LAB2 \e[0;33;49mType: \e[0mZebra Labeler \e[0;33;49mIP: \e[0m192.168.1.21 \e[0;33;49mDesc: \e[0m777 Test Printer Lab"
+    end
+  end
+end
+
+RSpec.describe CommonStuff, "#lpadmin_puts" do
+  context "when sent array of printer data" do
+    it "puts the lpadmin command to add the printer" do
+      prints_beret = lpadmin_puts(prints_albert)
+      expect(prints_beret).to eq 'lpadmin -p 0777LAB2 -L "777 Test Printer Lab" -D "Zebra Labeler" -E -v socket://192.168.1.21:9100 -m raw'
+    end
+  end
+end
+
+RSpec.describe CommonStuff, "#log_entry_data" do
+  context "when sent printer just provisioned" do
+    it "returns the log entry" do
+      prints_of_the_land_of_stench = log_entry_data(prints_albert)
+      prints_of_the_land_of_stench[0..32] = ''
+      expect(prints_of_the_land_of_stench).to eq 'lpadmin -p 0777LAB2 -L "777 Test Printer Lab" -D "Zebra Labeler" -E -v socket://192.168.1.21:9100 -m raw'
     end
   end
 end

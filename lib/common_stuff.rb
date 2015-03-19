@@ -1,12 +1,29 @@
 module CommonStuff
 
   @@config_file = File.join(Dir.home, "printsly.json")
+  @@prov_log = "/var/log/cups/provision_log"
 
-  def bar_both
-    puts # formatting
-    puts bar_top.yellow
-    puts bar_low.yellow
-    puts # formatting
+  def log_file
+    if Dir.exists?("/var/log/cups")
+      File.new(@@prov_log, "w+") unless File.exists?(@@prov_log)
+    end
+  end
+
+  def log_entry printerdata
+    if File.exists?(@@prov_log)
+      log_entry_write(printerdata)
+    end
+  end
+
+  def log_entry_write printerdata
+    File.open(@@prov_log, "a") do |f|
+      f.puts log_entry_data(printerdata)
+    end
+  end
+
+  def log_entry_data printerdata
+    timey = Time.new
+    "Added: " + timey.inspect + " lpadmin -p " + printerdata[0] + " -L \"" + printerdata[3] + "\" -D \"" + printerdata[2] + "\" -E -v socket://" + printerdata[1] + ":9100 -m raw"
   end
 
   def mod_name namey, store
@@ -33,14 +50,6 @@ module CommonStuff
     prompt; gets.chomp
   end
 
-  def bar_top
-    "_"*34 + " " + "Printsly" + " " + "_"*34
-  end
-
-  def bar_low
-    "-"*78
-  end
-
   def fill_hash work_dir, batchy, auto_mater
     cur_conf = Hash.new
     cur_conf[:work_dir]     = work_dir
@@ -59,29 +68,6 @@ module CommonStuff
     File.open(@@config_file, "w") do |f|
       f.write(cur_conf.to_json)
     end
-  end
-
-  def work_dir_text
-    puts #format
-    puts "The " + "working directory".yellow + " is the location " + "Printsly".yellow + " will look for"
-    puts "spreadsheets containing printers to add to " + "CUPS".yellow + "."
-  end
-
-  def batchy_text
-    puts #format
-    puts "Batch mode".yellow + " means all spreadsheets in the " + "working directory".yellow + " will be processed."
-  end
-
-  def auto_text
-    puts #format
-    puts "Auto provision".yellow + " means provisioning is done immediately with no"
-    puts "confirmation dialogue."
-  end
-
-  def welcome_text
-    puts "If this is the first time to run Printsly, please choose " + "[3]".yellow + " and configure."
-    puts #format
-    puts "The configuration file is stored in your home directory by default."
   end
 
 end
