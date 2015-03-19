@@ -5,6 +5,7 @@ require 'printsly'
 v = ARGV
 case
 when v.empty? == true
+  puts
   puts bar_top.yellow
   puts " "*24 + "Helps you add printers to CUPS".yellow + " "*19
   puts bar_low.yellow

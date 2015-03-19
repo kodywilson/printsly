@@ -80,7 +80,16 @@ RSpec.describe Menu, "#batch" do
   end
 end
 
-RSpec.describe CommonStuff, "#bars" do
+RSpec.describe Menu, "#reset_conf" do
+  context "when sent current configuration" do
+    it "resets configuration to default" do
+      resety = Menu.new.reset_conf(cur_conf)
+      expect(resety[:work_dir]).to eq "Not Set"
+    end
+  end
+end
+
+RSpec.describe ShowText, "#bars" do
   context "when asked for top bar" do
     it "puts the top bar" do
       toppy = bar_top
@@ -95,7 +104,7 @@ RSpec.describe CommonStuff, "#bars" do
   end
 end
 
-RSpec.describe CommonStuff, "#prov_text" do
+RSpec.describe ShowText, "#prov_text" do
   context "when asked for provisioning text" do
     it "puts the provisioning greeting including store number" do
       provo = prov_text(store)
@@ -104,7 +113,7 @@ RSpec.describe CommonStuff, "#prov_text" do
   end
 end
 
-RSpec.describe CommonStuff, "#printer_puts" do
+RSpec.describe ShowText, "#printer_puts" do
   context "when sent array of printer data" do
     it "puts the information about the printer" do
       prints_george = printer_puts(prints_albert)
@@ -113,7 +122,7 @@ RSpec.describe CommonStuff, "#printer_puts" do
   end
 end
 
-RSpec.describe CommonStuff, "#lpadmin_puts" do
+RSpec.describe ShowText, "#lpadmin_puts" do
   context "when sent array of printer data" do
     it "puts the lpadmin command to add the printer" do
       prints_beret = lpadmin_puts(prints_albert)
@@ -128,6 +137,15 @@ RSpec.describe CommonStuff, "#log_entry_data" do
       prints_of_the_land_of_stench = log_entry_data(prints_albert)
       prints_of_the_land_of_stench[0..32] = ''
       expect(prints_of_the_land_of_stench).to eq 'lpadmin -p 0777LAB2 -L "777 Test Printer Lab" -D "Zebra Labeler" -E -v socket://192.168.1.21:9100 -m raw'
+    end
+  end
+end
+
+RSpec.describe CommonStuff, "#prompt" do
+  context "when asked for a prompt" do
+    it "returns the >> prompt" do
+      prompty = prompt
+      expect(prompty).to eq nil
     end
   end
 end
