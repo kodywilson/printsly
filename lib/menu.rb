@@ -47,21 +47,9 @@ class Menu
     when move == "3"
       @cur_conf = Configurator.new.choices(@cur_conf)
     when move == "4"
-      puts #format
-      puts "Current Working Directory:        " + @cur_conf[:work_dir].green
-      puts "Current Batch Mode Setting:       " + @cur_conf[:batchy].green
-      puts "Current Auto Provision Setting:   " + @cur_conf[:auto_mater].green
+      show_conf(@cur_conf)
     when move == "5"
-      puts #format
-      puts "Resetting to default configuration...".yellow
-      sleep(0.5)
-      puts "...".yellow
-      sleep(0.5)
-      puts "......".red
-      @cur_conf   = fill_hash("Not Set", "Off", "Off")
-      save_config(@cur_conf)
-      sleep(0.5)
-      puts ".........done!".green
+      @cur_conf = reset_conf(@cur_conf)
     when move == "6"
       # leave application
       puts #format
@@ -69,6 +57,27 @@ class Menu
       puts #format
       exit
     end
+  end
+
+  def reset_conf cur_conf
+    puts #format
+    puts "Resetting to default configuration...".yellow
+    sleep(0.5)
+    puts "...".yellow
+    sleep(0.5)
+    puts "......".red
+    cur_conf   = fill_hash("Not Set", "Off", "Off")
+    save_config(cur_conf) if File.exists?(File.join(Dir.home, "printsly.json"))
+    sleep(0.5)
+    puts ".........done!".green
+    cur_conf
+  end
+
+  def show_conf cur_conf
+    puts #format
+    puts "Current Working Directory:        " + cur_conf[:work_dir].green
+    puts "Current Batch Mode Setting:       " + cur_conf[:batchy].green
+    puts "Current Auto Provision Setting:   " + cur_conf[:auto_mater].green
   end
 
   def singleton cur_conf
