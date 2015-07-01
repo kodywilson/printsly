@@ -49,10 +49,18 @@ class Printers
 
   def provision printers, store
     log_file
+    $green = true
     printers.each do | printername, printerdata |
       printerdata[0] = mod_name(printerdata[0], store)
-      puts lpadmin_puts(printerdata)
-      log_entry(printerdata)
+      lp_command = lpadmin_puts(printerdata)
+      system "bash", "-c", lp_command
+      if $?.exitstatus > 0
+        puts "I failed to add #{printerdata[0]}!" # for CLI output
+        $green = false
+        log_entry(printerdata, 1)
+      else
+        log_entry(printerdata, 0)
+      end
     end
   end
 

@@ -9,43 +9,45 @@ when v.empty? == true
   puts bar_top.yellow
   puts " "*24 + "Helps you add printers to CUPS".yellow + " "*19
   puts bar_low.yellow
-  puts # formatting
+  puts # format
   puts "Selectable options will normally be enclosed in " + "[ ]".yellow + "'s."
-  puts # formatting
+  puts # format
   Menu.new.choices
-when v.count > 1
-  puts # formatting
-  puts "Please pass only one directory at a time!".red
-  puts # formatting
+when v.count > 2
+  help_text
   exit 1 #something went wrong
-when v.count < 2
-  v.each do |dirk|
+when v.count == 1
+  help_text
+  exit 1 #soemthing went wrong
+when v.count == 2
+  v.each do |dirk| #basic directory verification
     if /^\//.match(dirk) #does path start at root?
-      case Dir.exists?(dirk)
-      when false
-        puts # formatting
-        puts "That directory does not exist!".red
-        puts # formatting
+      unless Dir.exists?(dirk)
+        puts # format
+        puts "#{dirk} does not exist!".red
+        help_text
         exit 1 #something went wrong
-      when true
-        spreads = Dir.glob(File.join(dirk, '*.xls'))
-        case spreads.size > 0
-        when true
-          spreads.each do |sheety|
-            cur_conf = fill_hash sheety, "On", "On"
-            Batch.new.process(cur_conf)
-          end
-        when false
-          puts # formatting
-          puts "There are no spreadsheets in specified directory!".red
-          puts # formatting
-        end
       end
     else
-      puts # formatting
-      puts "Please pass the full path to the directory you wish to process and nothing else!".red
-      puts # formatting
+      help_text
       exit 1 #something went wrong
     end
+  end
+  spreads = Dir.glob(File.join(v[0], '*.xls'))
+  case spreads.size > 0
+  when true
+    spreads.each do |sheety|
+      hosty = `hostname`.strip
+      sheet = sheety + "." + hosty
+      cur_conf = fill_hash sheety, "On", "On"
+      unless File.exists?(sheet)
+        Batch.new.process(cur_conf)
+        system "bash", "-c", "touch #{sheet}" if $green == true
+      end
+    end
+  when false
+    puts # formatting
+    puts "There are no spreadsheets in #{v[0]}!".red
+    puts # formatting
   end
 end

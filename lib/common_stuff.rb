@@ -9,21 +9,27 @@ module CommonStuff
     end
   end
 
-  def log_entry printerdata
+  def log_entry printerdata, status
     if File.exists?(@@prov_log)
-      log_entry_write(printerdata)
+      log_entry_write(printerdata, status)
     end
   end
 
-  def log_entry_write printerdata
+  def log_entry_write printerdata, status
     File.open(@@prov_log, "a") do |f|
-      f.puts log_entry_data(printerdata)
+      f.puts log_entry_data_woot(printerdata) if status == 0
+      f.puts log_entry_data_fail(printerdata) if status == 1
     end
   end
 
-  def log_entry_data printerdata
+  def log_entry_data_woot printerdata
     timey = Time.new
-    "Added: " + timey.inspect + " lpadmin -p " + printerdata[0] + " -L \"" + printerdata[3] + "\" -D \"" + printerdata[2] + "\" -E -v socket://" + printerdata[1] + ":9100 -m raw"
+    "Add: " + timey.inspect + " " + printerdata[0] + " " + printerdata[2] + " IP: " + printerdata[1]
+  end
+
+  def log_entry_data_fail printerdata
+    timey = Time.new
+    "FAILED: " + timey.inspect + " " + printerdata[0] + " " + printerdata[2] + " IP: " + printerdata[1]
   end
 
   def mod_name namey, store

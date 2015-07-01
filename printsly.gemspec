@@ -1,7 +1,7 @@
 Gem::Specification.new do |s|
   s.name         = 'printsly'
-  s.version      = '0.0.1'
-  s.date         = '2015-03-12'
+  s.version      = '0.0.2'
+  s.date         = '2015-07-01'
   s.summary      = "Printer management software"
   s.description  = "Helps you add printers to CUPS"
   s.authors      = ["Kody Wilson"]
@@ -11,5 +11,5 @@ Gem::Specification.new do |s|
   s.executables  << 'printsly'
   s.license      = 'MIT'
   s.add_runtime_dependency 'spreadsheet', '~> 1.0.3', '>= 1.0.3'
-  s.add_runtime_dependency 'colorize', '~> 0.7.5', '>= 0.7.5'
+  s.add_runtime_dependency 'colorize', '~> 0.7.7', '>= 0.7.7'
 end

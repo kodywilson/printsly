@@ -7,10 +7,10 @@ module ShowText
   end
 
   def bar_both
-    puts # formatting
+    puts # format
     puts bar_top.yellow
     puts bar_low.yellow
-    puts # formatting
+    puts # format
   end
 
   def bar_low
@@ -24,6 +24,15 @@ module ShowText
   def batchy_text
     puts #format
     puts "Batch mode".yellow + " means all spreadsheets in the " + "working directory".yellow + " will be processed."
+  end
+
+  def help_text
+    puts # format
+    puts "Please pass the FULL PATH for two directories separated by a space!".red
+    puts "Pending files in the first directory and done in the second.".red
+    puts # format
+    puts "EXAMPLE: printsly /u01/app/cups/pending /u01/app/cups/done".green
+    puts # format
   end
 
   def lpadmin_puts printerdata
