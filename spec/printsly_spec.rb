@@ -131,12 +131,19 @@ RSpec.describe ShowText, "#lpadmin_puts" do
   end
 end
 
-RSpec.describe CommonStuff, "#log_entry_data" do
-  context "when sent printer just provisioned" do
+RSpec.describe CommonStuff, "#log_entry_data_woot" do
+  context "when sent printer just provisioned on success" do
     it "returns the log entry" do
-      prints_of_the_land_of_stench = log_entry_data(prints_albert)
-      prints_of_the_land_of_stench[0..32] = ''
-      expect(prints_of_the_land_of_stench).to eq 'lpadmin -p 0777LAB2 -L "777 Test Printer Lab" -D "Zebra Labeler" -E -v socket://192.168.1.21:9100 -m raw'
+      prints_of_the_land_of_stench = log_entry_data_woot(prints_albert)
+      prints_of_the_land_of_stench[0..30] = ''
+      expect(prints_of_the_land_of_stench).to eq '0777LAB2 Zebra Labeler IP: 192.168.1.21'
+    end
+  end
+  context "when sent printer just provisioned on failure" do
+    it "returns the log entry" do
+      prints_of_the_land_of_stench = log_entry_data_fail(prints_albert)
+      prints_of_the_land_of_stench[0..33] = ''
+      expect(prints_of_the_land_of_stench).to eq '0777LAB2 Zebra Labeler IP: 192.168.1.21'
     end
   end
 end
