@@ -34,8 +34,7 @@ when v.count == 2
     end
   end
   spreads = Dir.glob(File.join(v[0], '*.xls'))
-  case spreads.size > 0
-  when true
+  if spreads.size > 0
     spreads.each do |sheety|
       hosty = `hostname`.strip
       sheet = sheety + "." + hosty
@@ -45,9 +44,5 @@ when v.count == 2
         system "bash", "-c", "touch #{sheet}" if $green == true
       end
     end
-  when false
-    puts # formatting
-    puts "There are no spreadsheets in #{v[0]}!".red
-    puts # formatting
   end
 end
