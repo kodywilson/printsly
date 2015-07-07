@@ -17,19 +17,18 @@ module CommonStuff
 
   def log_entry_write printerdata, status
     File.open(@@prov_log, "a") do |f|
-      f.puts log_entry_data_woot(printerdata) if status == 0
-      f.puts log_entry_data_fail(printerdata) if status == 1
+      f.puts log_entry_data(printerdata, status)
     end
   end
 
-  def log_entry_data_woot printerdata
+  def log_entry_data printerdata, status
     timey = Time.new
-    "Add: " + timey.inspect + " " + printerdata[0] + " " + printerdata[2] + " IP: " + printerdata[1]
-  end
-
-  def log_entry_data_fail printerdata
-    timey = Time.new
-    "FAILED: " + timey.inspect + " " + printerdata[0] + " " + printerdata[2] + " IP: " + printerdata[1]
+    case status
+    when 0
+      "Add: " + timey.inspect + " " + printerdata[0] + " " + printerdata[2] + " IP: " + printerdata[1]
+    when 1
+      "FAILED: " + timey.inspect + " " + printerdata[0] + " " + printerdata[2] + " IP: " + printerdata[1]
+    end
   end
 
   def mod_name namey, store
