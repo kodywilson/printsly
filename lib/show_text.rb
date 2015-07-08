@@ -36,7 +36,7 @@ module ShowText
   end
 
   def lpadmin_puts printerdata
-    "lpadmin -p " + printerdata[0] + " -L \"" + printerdata[3] + "\" -D \"" + printerdata[2] + "\" -E -v socket://" + printerdata[1] + ":9100 -m raw"
+    '/usr/sbin/lpadmin -p ' + printerdata[0] + " -L \"" + printerdata[3] + "\" -D \"" + printerdata[2] + "\" -E -v socket://" + printerdata[1] + ":9100 -m raw"
   end
 
   def prov_text store

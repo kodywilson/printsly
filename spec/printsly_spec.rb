@@ -54,8 +54,8 @@ RSpec.describe Printers, "#provision" do
     it "displays lpadmin command to add each printer" do
       test_page = Printers.new.provision(printys, store)
       test_page = test_page["0777LAB1"]
-      test_page = "lpadmin -p " + test_page[0] + " -L \"" + test_page[3] + "\" -D \"" + test_page[2] + "\" -E -v socket://" + test_page[1] + ":9100 -m raw"
-      expect(test_page).to eq 'lpadmin -p 0777LAB1 -L "777 Test Printer Lab" -D "HP LaserJet IV" -E -v socket://192.168.1.20:9100 -m raw'
+      test_page = '/usr/sbin/lpadmin -p ' + test_page[0] + " -L \"" + test_page[3] + "\" -D \"" + test_page[2] + "\" -E -v socket://" + test_page[1] + ":9100 -m raw"
+      expect(test_page).to eq '/usr/sbin/lpadmin -p 0777LAB1 -L "777 Test Printer Lab" -D "HP LaserJet IV" -E -v socket://192.168.1.20:9100 -m raw'
     end
   end
 end
@@ -126,7 +126,7 @@ RSpec.describe ShowText, "#lpadmin_puts" do
   context "when sent array of printer data" do
     it "puts the lpadmin command to add the printer" do
       prints_beret = lpadmin_puts(prints_albert)
-      expect(prints_beret).to eq 'lpadmin -p 0777LAB2 -L "777 Test Printer Lab" -D "Zebra Labeler" -E -v socket://192.168.1.21:9100 -m raw'
+      expect(prints_beret).to eq '/usr/sbin/lpadmin -p 0777LAB2 -L "777 Test Printer Lab" -D "Zebra Labeler" -E -v socket://192.168.1.21:9100 -m raw'
     end
   end
 end
